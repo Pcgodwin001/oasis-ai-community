@@ -35,81 +35,102 @@ export default function Budget() {
   ]
 
   const savingTips = [
-    { icon: '🏪', title: 'Shop Store Brands', description: 'Save 30-40% by choosing store brands over name brands' },
-    { icon: '🛒', title: 'Buy in Bulk', description: 'Rice, beans, pasta cost less per serving in larger quantities' },
-    { icon: '📅', title: 'Plan Your Meals', description: 'Planning prevents impulse purchases and food waste' },
-    { icon: '❄️', title: 'Use Your Freezer', description: 'Buy meat on sale and freeze for later use' },
-    { icon: '🥫', title: 'Stock Up on Sales', description: 'Buy non-perishables when they\'re on sale' },
-    { icon: '💰', title: 'Check Unit Prices', description: 'Bigger isn\'t always cheaper - compare per-ounce costs' }
+    { icon: '🏪', title: 'Shop Store Brands', description: 'Save 30-40% choosing store brands' },
+    { icon: '🛒', title: 'Buy in Bulk', description: 'Rice, beans, pasta cost less in bulk' },
+    { icon: '📅', title: 'Plan Your Meals', description: 'Planning prevents waste' },
+    { icon: '❄️', title: 'Use Your Freezer', description: 'Buy meat on sale, freeze it' },
+    { icon: '🥫', title: 'Stock Up on Sales', description: 'Buy non-perishables on sale' },
+    { icon: '💰', title: 'Check Unit Prices', description: 'Compare per-ounce costs' }
   ]
 
   const cheapStores = [
-    { name: 'Dollar General', distance: '0.8 mi', savings: 'Best for: Canned goods, snacks' },
-    { name: 'Aldi', distance: '1.2 mi', savings: 'Best for: Fresh produce, dairy' },
-    { name: 'Walmart', distance: '1.5 mi', savings: 'Best for: Bulk items, meat' }
+    { name: 'Dollar General', distance: '0.8 mi', savings: 'Best for: Canned goods, snacks', emoji: '🏪' },
+    { name: 'Aldi', distance: '1.2 mi', savings: 'Best for: Fresh produce, dairy', emoji: '🛒' },
+    { name: 'Walmart', distance: '1.5 mi', savings: 'Best for: Bulk items, meat', emoji: '🏬' }
   ]
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 relative overflow-hidden">
+      {/* Animated Background Blobs */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 -left-4 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-40 animate-blob"></div>
+        <div className="absolute top-0 -right-4 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-40 animate-blob animation-delay-2000"></div>
+        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-40 animate-blob animation-delay-4000"></div>
+      </div>
+
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-4 py-4 shadow-sm">
+      <div className="relative z-20 backdrop-blur-xl bg-white/80 border-b border-white/20 px-4 py-4 shadow-lg">
         <div className="flex items-center">
           <button
             onClick={() => navigate('/')}
-            className="mr-3 text-gray-600 hover:text-gray-900"
+            className="mr-3 text-gray-600 hover:text-gray-900 p-2 rounded-xl hover:bg-white/50 transition-all duration-300"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </button>
           <div>
-            <h1 className="text-lg font-semibold text-gray-900">Smart Budget</h1>
-            <p className="text-sm text-gray-500">Make your benefits last</p>
+            <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              Smart Budget
+            </h1>
+            <p className="text-sm text-gray-600">Make your benefits last</p>
           </div>
         </div>
       </div>
 
-      <div className="p-4 space-y-4">
-        {/* Budget Summary */}
-        <div className="bg-gradient-to-br from-purple-600 to-pink-600 rounded-2xl p-6 text-white shadow-lg">
-          <p className="text-sm opacity-90 mb-2">Your Daily Budget</p>
-          <p className="text-5xl font-bold mb-4">${dailyBudget.toFixed(2)}</p>
-          <div className="bg-white bg-opacity-20 rounded-lg p-4">
-            <div className="flex justify-between mb-2">
-              <span className="text-sm">Current Balance</span>
-              <span className="font-semibold">${balance.toFixed(2)}</span>
+      <div className="relative z-10 p-4 space-y-6">
+        {/* Budget Summary - Large Beautiful Card */}
+        <div className="backdrop-blur-xl bg-gradient-to-br from-purple-500 via-purple-600 to-pink-600 rounded-3xl p-8 text-white shadow-2xl border border-white/20">
+          <div className="flex items-center mb-6">
+            <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center text-2xl backdrop-blur-sm mr-4">
+              📊
+            </div>
+            <div>
+              <p className="text-sm opacity-90 font-medium">Your Daily Budget</p>
+              <p className="text-xs opacity-75">To make benefits last</p>
+            </div>
+          </div>
+
+          <p className="text-6xl font-bold mb-6">${dailyBudget.toFixed(2)}</p>
+
+          <div className="backdrop-blur-xl bg-white/20 rounded-2xl p-5">
+            <div className="flex justify-between mb-3">
+              <span className="text-sm font-medium">Current Balance</span>
+              <span className="text-xl font-bold">${balance.toFixed(2)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-sm">Days Until Refill</span>
-              <span className="font-semibold">{daysLeft} days</span>
+              <span className="text-sm font-medium">Days Until Refill</span>
+              <span className="text-xl font-bold">{daysLeft} days</span>
             </div>
           </div>
         </div>
 
         {/* Sample Meal Plan */}
-        <div className="bg-white rounded-xl p-5 shadow-sm">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-            <span className="mr-2">📝</span>
-            Sample 3-Day Meal Plan
+        <div className="backdrop-blur-xl bg-white/70 rounded-3xl p-6 shadow-2xl border border-white/20">
+          <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center space-x-2">
+            <span className="text-2xl">📝</span>
+            <span>Sample 3-Day Meal Plan</span>
           </h2>
 
-          <div className="space-y-4">
+          <div className="space-y-5">
             {mealPlan.map((day, dayIndex) => (
-              <div key={dayIndex} className="border-b border-gray-100 last:border-0 pb-4 last:pb-0">
-                <h3 className="font-semibold text-gray-900 mb-2">{day.day}</h3>
-                {day.meals.map((meal, mealIndex) => (
-                  <div key={mealIndex} className="flex justify-between items-start mb-2 ml-4">
-                    <div className="flex-1">
-                      <p className="text-sm font-medium text-gray-700">{meal.name}</p>
-                      <p className="text-xs text-gray-500">{meal.items}</p>
+              <div key={dayIndex} className="backdrop-blur-xl bg-gray-50/50 rounded-2xl p-5 border border-gray-100">
+                <h3 className="text-lg font-bold text-gray-900 mb-4">{day.day}</h3>
+                <div className="space-y-3">
+                  {day.meals.map((meal, mealIndex) => (
+                    <div key={mealIndex} className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <p className="font-semibold text-gray-800">{meal.name}</p>
+                        <p className="text-sm text-gray-600">{meal.items}</p>
+                      </div>
+                      <span className="text-lg font-bold text-green-600">${meal.cost.toFixed(2)}</span>
                     </div>
-                    <span className="text-sm font-semibold text-green-600">${meal.cost.toFixed(2)}</span>
-                  </div>
-                ))}
-                <div className="mt-2 ml-4 pt-2 border-t border-gray-100">
-                  <div className="flex justify-between">
-                    <span className="text-sm font-semibold text-gray-700">Total:</span>
-                    <span className="text-sm font-bold text-gray-900">
+                  ))}
+                </div>
+                <div className="mt-4 pt-4 border-t border-gray-200">
+                  <div className="flex justify-between items-center">
+                    <span className="font-bold text-gray-700">Daily Total:</span>
+                    <span className="text-xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
                       ${day.meals.reduce((sum, meal) => sum + meal.cost, 0).toFixed(2)}
                     </span>
                   </div>
@@ -118,23 +139,24 @@ export default function Budget() {
             ))}
           </div>
 
-          <div className="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-3">
-            <p className="text-sm text-blue-900">
-              💡 This 3-day plan costs $15.50 total, averaging $5.17/day - right on budget!
+          <div className="mt-6 backdrop-blur-xl bg-blue-50/80 border border-blue-200 rounded-2xl p-5">
+            <p className="text-sm text-blue-900 font-medium flex items-start">
+              <span className="mr-2 text-lg">💡</span>
+              <span>This 3-day plan costs $15.50 total, averaging $5.17/day - right on budget!</span>
             </p>
           </div>
         </div>
 
         {/* Money-Saving Tips */}
-        <div className="bg-white rounded-xl p-5 shadow-sm">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Money-Saving Tips</h2>
-          <div className="grid grid-cols-1 gap-3">
+        <div className="backdrop-blur-xl bg-white/70 rounded-3xl p-6 shadow-2xl border border-white/20">
+          <h2 className="text-xl font-bold text-gray-900 mb-6">💰 Money-Saving Tips</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {savingTips.map((tip, index) => (
-              <div key={index} className="flex items-start p-3 bg-gray-50 rounded-lg">
-                <span className="text-2xl mr-3">{tip.icon}</span>
+              <div key={index} className="group flex items-start p-5 backdrop-blur-xl bg-gradient-to-br from-gray-50/50 to-blue-50/30 rounded-2xl border border-gray-100 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                <span className="text-3xl mr-3 group-hover:scale-110 transition-transform duration-300">{tip.icon}</span>
                 <div>
-                  <p className="font-medium text-gray-900 text-sm">{tip.title}</p>
-                  <p className="text-xs text-gray-600 mt-1">{tip.description}</p>
+                  <p className="font-bold text-gray-900 mb-1">{tip.title}</p>
+                  <p className="text-sm text-gray-600">{tip.description}</p>
                 </div>
               </div>
             ))}
@@ -142,32 +164,37 @@ export default function Budget() {
         </div>
 
         {/* Cheapest Stores Nearby */}
-        <div className="bg-white rounded-xl p-5 shadow-sm">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Cheapest Stores Nearby</h2>
+        <div className="backdrop-blur-xl bg-white/70 rounded-3xl p-6 shadow-2xl border border-white/20">
+          <h2 className="text-xl font-bold text-gray-900 mb-6">🏪 Cheapest Stores Nearby</h2>
           <div className="space-y-3">
             {cheapStores.map((store, index) => (
-              <div key={index} className="border border-gray-200 rounded-lg p-4">
-                <div className="flex justify-between items-start mb-2">
-                  <h3 className="font-semibold text-gray-900">{store.name}</h3>
-                  <span className="text-sm text-gray-500">{store.distance}</span>
+              <div key={index} className="group backdrop-blur-xl bg-gradient-to-br from-white/80 to-gray-50/50 border border-gray-200 rounded-2xl p-5 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                <div className="flex justify-between items-start mb-3">
+                  <div className="flex items-center space-x-3">
+                    <span className="text-3xl group-hover:scale-110 transition-transform duration-300">{store.emoji}</span>
+                    <div>
+                      <h3 className="text-lg font-bold text-gray-900">{store.name}</h3>
+                      <span className="text-sm text-gray-600">{store.distance}</span>
+                    </div>
+                  </div>
                 </div>
-                <p className="text-sm text-gray-600">{store.savings}</p>
+                <p className="text-sm font-medium text-gray-700">{store.savings}</p>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Talk to ZENO */}
-        <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl p-6 text-white shadow-lg">
-          <h3 className="text-lg font-bold mb-2">Need Personalized Budget Help?</h3>
-          <p className="text-sm opacity-90 mb-4">
-            ZENO can help you create a custom meal plan based on your family size, dietary needs, and preferences.
+        {/* Talk to ZENO CTA */}
+        <div className="backdrop-blur-xl bg-gradient-to-r from-blue-500 via-purple-600 to-pink-600 rounded-3xl p-8 text-white shadow-2xl border border-white/20">
+          <h3 className="text-2xl font-bold mb-3">Need Personalized Help?</h3>
+          <p className="text-sm opacity-95 mb-6 leading-relaxed">
+            ZENO can create a custom meal plan based on your family size, dietary needs, and preferences.
           </p>
           <button
             onClick={() => navigate('/chat')}
-            className="bg-white text-blue-600 px-6 py-2 rounded-lg font-medium hover:bg-gray-100 transition-colors"
+            className="backdrop-blur-xl bg-white text-blue-600 px-8 py-4 rounded-2xl font-bold hover:bg-gray-100 transition-all duration-300 shadow-lg hover:shadow-2xl hover:scale-105"
           >
-            Ask ZENO
+            Ask ZENO →
           </button>
         </div>
       </div>
