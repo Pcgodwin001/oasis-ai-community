@@ -1,19 +1,17 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Checkbox } from '../ui/checkbox';
 import { Mail, Lock, AlertCircle } from 'lucide-react';
 import { authService } from '../../services/authService';
+import { userService } from '../../services/userService';
 import { toast } from 'sonner';
 import oasisLogo from 'figma:asset/fe6c3ee5b4ff23915f06469b49dec7bb4e9b188a.png';
 
-interface LoginProps {
-  onLogin: () => void;
-}
-
-export default function Login({ onLogin }: LoginProps) {
+export default function Login() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
@@ -35,8 +33,12 @@ export default function Login({ onLogin }: LoginProps) {
         return;
       }
 
-      toast.success('Welcome back!');
-      onLogin();
+      // Get user profile for personalized welcome
+      const profile = await userService.getProfile(user.id);
+      const firstName = profile?.fullName?.split(' ')[0] || 'back';
+
+      toast.success(`Welcome back, ${firstName}!`);
+      navigate('/');
     } catch (err) {
       setError('An unexpected error occurred. Please try again.');
       toast.error('Login failed');

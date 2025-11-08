@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
@@ -11,11 +11,8 @@ import { userService } from '../../services/userService';
 import { toast } from 'sonner';
 import oasisLogo from 'figma:asset/fe6c3ee5b4ff23915f06469b49dec7bb4e9b188a.png';
 
-interface SignUpProps {
-  onSignUp: () => void;
-}
-
-export default function SignUp({ onSignUp }: SignUpProps) {
+export default function SignUp() {
+  const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -85,7 +82,7 @@ export default function SignUp({ onSignUp }: SignUpProps) {
       });
 
       toast.success('Account created successfully!');
-      onSignUp();
+      navigate('/');
     } catch (err) {
       setError('An unexpected error occurred. Please try again.');
       toast.error('Sign up failed');

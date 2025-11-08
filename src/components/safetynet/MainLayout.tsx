@@ -1,8 +1,8 @@
 import { useState, ReactNode } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { 
-  Home, CreditCard, Bot, MapPin, AlertTriangle, 
-  DollarSign, Receipt, Briefcase, Users, CheckCircle, 
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import {
+  Home, CreditCard, Bot, MapPin, AlertTriangle,
+  DollarSign, Receipt, Briefcase, Users, CheckCircle,
   Bus, Settings, Menu, X, Bell, Search, User, ChevronLeft,
   ChevronRight, LogOut
 } from 'lucide-react';
@@ -19,11 +19,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
+import { useUser } from '../../contexts/UserContext';
+import { authService } from '../../services/authService';
+import { toast } from 'sonner';
 import oasisLogo from 'figma:asset/fe6c3ee5b4ff23915f06469b49dec7bb4e9b188a.png';
 
 interface MainLayoutProps {
   children: ReactNode;
-  onLogout: () => void;
 }
 
 const menuItems = [
@@ -40,12 +42,38 @@ const menuItems = [
   { icon: Bus, label: 'Transportation', path: '/transportation' },
 ];
 
-export default function MainLayout({ children, onLogout }: MainLayoutProps) {
+export default function MainLayout({ children }: MainLayoutProps) {
+  const { profile } = useUser();
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
 
   const isActive = (path: string) => location.pathname === path;
+
+  const handleLogout = async () => {
+    const { error } = await authService.signOut();
+    if (error) {
+      toast.error('Failed to logout');
+      return;
+    }
+    toast.success('Logged out successfully');
+    navigate('/login');
+  };
+
+  // Generate user initials from name
+  const getInitials = (name: string | null) => {
+    if (!name) return 'U';
+    const parts = name.split(' ');
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+    return name.substring(0, 2).toUpperCase();
+  };
+
+  const userInitials = getInitials(profile?.fullName || null);
+  const userName = profile?.fullName || 'User';
+  const userLocation = profile?.location || (profile?.zipCode ? `ZIP ${profile.zipCode}` : 'Not set');
 
   return (
     <div className="h-screen flex overflow-hidden bg-gradient-to-br from-blue-50/40 via-gray-50 to-cyan-50/30 relative">
@@ -95,12 +123,12 @@ export default function MainLayout({ children, onLogout }: MainLayoutProps) {
               <Avatar>
                 <AvatarImage src="" />
                 <AvatarFallback className="backdrop-blur-lg bg-white/60 text-gray-900 border border-white/60">
-                  JD
+                  {userInitials}
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0">
-                <p className="text-gray-900 truncate">John Doe</p>
-                <p className="text-gray-600 truncate">Jackson, TN</p>
+                <p className="text-gray-900 truncate font-medium">{userName}</p>
+                <p className="text-gray-600 text-sm truncate">{userLocation}</p>
               </div>
             </div>
           </div>
@@ -144,7 +172,7 @@ export default function MainLayout({ children, onLogout }: MainLayoutProps) {
             {sidebarOpen && <span>Settings</span>}
           </Link>
           <button
-            onClick={onLogout}
+            onClick={handleLogout}
             className="w-full flex items-center space-x-3 px-3 py-2 rounded-xl text-gray-700 hover:backdrop-blur-md hover:bg-red-50/30 hover:border hover:border-red-400/20 transition-all duration-300"
           >
             <LogOut className="w-5 h-5 flex-shrink-0" />
@@ -184,12 +212,12 @@ export default function MainLayout({ children, onLogout }: MainLayoutProps) {
           <div className="flex items-center space-x-3 backdrop-blur-md bg-white/20 rounded-xl p-3 border border-white/40">
             <Avatar>
               <AvatarFallback className="backdrop-blur-lg bg-white/60 text-gray-900 border border-white/60">
-                JD
+                {userInitials}
               </AvatarFallback>
             </Avatar>
             <div>
-              <p className="text-gray-900">John Doe</p>
-              <p className="text-gray-600">Jackson, TN</p>
+              <p className="text-gray-900 font-medium">{userName}</p>
+              <p className="text-gray-600 text-sm">{userLocation}</p>
             </div>
           </div>
         </div>
@@ -229,7 +257,7 @@ export default function MainLayout({ children, onLogout }: MainLayoutProps) {
           <button
             onClick={() => {
               setMobileMenuOpen(false);
-              onLogout();
+              handleLogout();
             }}
             className="w-full flex items-center space-x-3 px-3 py-2 rounded-xl text-gray-700 hover:backdrop-blur-md hover:bg-white/30 hover:border hover:border-white/40 transition-all duration-300"
           >
@@ -277,13 +305,13 @@ export default function MainLayout({ children, onLogout }: MainLayoutProps) {
                 <Button variant="ghost" size="sm">
                   <Avatar className="w-8 h-8">
                     <AvatarFallback className="backdrop-blur-lg bg-white/60 text-gray-900 border border-white/60">
-                      JD
+                      {userInitials}
                     </AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuLabel>{userName}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
                   <Link to="/settings">
@@ -291,7 +319,7 @@ export default function MainLayout({ children, onLogout }: MainLayoutProps) {
                     Settings
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={onLogout}>
+                <DropdownMenuItem onClick={handleLogout}>
                   <LogOut className="w-4 h-4 mr-2" />
                   Logout
                 </DropdownMenuItem>

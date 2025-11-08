@@ -26,6 +26,7 @@ import {
 import { cashflowService } from '../../services/cashflowService';
 import { authService } from '../../services/authService';
 import { ebtService } from '../../services/ebtService';
+import { useUser } from '../../contexts/UserContext';
 
 // Default fallback data
 const defaultCashFlow = [
@@ -168,21 +169,22 @@ const quickActions = [
 ];
 
 export default function Dashboard() {
+  const { user, profile } = useUser();
   const [cashFlowData, setCashFlowData] = useState(defaultCashFlow);
   const [financialHealth, setFinancialHealth] = useState({ score: 62, daysUntilCrisis: 4, recommendations: [] });
-  const [ebtBalance, setEbtBalance] = useState(245);
+  const [ebtBalance, setEbtBalance] = useState<number | null>(null);
+  const [currentBalance, setCurrentBalance] = useState(156);
   const [isLoading, setIsLoading] = useState(true);
 
-  const currentBalance = 156;
   const financialHealthScore = financialHealth.score;
   const daysUntilCrisis = financialHealth.daysUntilCrisis || 4;
-  const emergencyFund = 87;
-  const shutdownRisk = 35;
+
+  // Get user's first name
+  const firstName = profile?.fullName?.split(' ')[0] || 'there';
 
   useEffect(() => {
     const loadDashboardData = async () => {
       try {
-        const user = await authService.getCurrentUser();
         if (!user) {
           setIsLoading(false);
           return;
@@ -198,6 +200,10 @@ export default function Dashboard() {
             crisis: p.predictedBalance <= 0
           }));
           setCashFlowData(formattedData);
+          // Set current balance from first prediction
+          if (formattedData[0]) {
+            setCurrentBalance(formattedData[0].balance);
+          }
         }
 
         // Load financial health
@@ -218,7 +224,7 @@ export default function Dashboard() {
     };
 
     loadDashboardData();
-  }, []);
+  }, [user]);
 
   return (
     <div className="p-4 lg:p-6 space-y-6">
@@ -226,30 +232,45 @@ export default function Dashboard() {
       <div className="backdrop-blur-xl bg-white border border-blue-400/20 rounded-3xl p-6 lg:p-8 shadow-2xl overflow-hidden">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
           <div className="flex-1">
-            <h1 className="text-gray-900 mb-2">Welcome back, John!</h1>
+            <h1 className="text-gray-900 mb-2">Welcome back, {firstName}!</h1>
             <p className="text-gray-600 mb-4">
               AI Financial Coach monitoring your situation 24/7
             </p>
-            <div className="flex flex-wrap gap-4">
-              <div className="backdrop-blur-lg bg-gradient-to-br from-white/40 to-white/20 border border-white/40 rounded-xl px-4 py-2 shadow-lg">
-                <p className="text-gray-600">Financial Health</p>
-                <p className="text-gray-900">{financialHealthScore}/100 - Fair</p>
+            {isLoading ? (
+              <div className="flex items-center gap-2 text-gray-600">
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
+                Loading your financial data...
               </div>
-              <div className="backdrop-blur-lg bg-gradient-to-br from-white/40 to-white/20 border border-white/40 rounded-xl px-4 py-2 shadow-lg">
-                <p className="text-gray-600">Next Crisis</p>
-                <p className="text-gray-900">{daysUntilCrisis} days (Nov 12)</p>
+            ) : (
+              <div className="flex flex-wrap gap-4">
+                <div className="backdrop-blur-lg bg-gradient-to-br from-white/40 to-white/20 border border-white/40 rounded-xl px-4 py-2 shadow-lg">
+                  <p className="text-sm text-gray-600">Financial Health</p>
+                  <p className="text-lg font-semibold text-gray-900">{financialHealthScore}/100</p>
+                </div>
+                {daysUntilCrisis && daysUntilCrisis > 0 && (
+                  <div className="backdrop-blur-lg bg-gradient-to-br from-white/40 to-white/20 border border-white/40 rounded-xl px-4 py-2 shadow-lg">
+                    <p className="text-sm text-gray-600">Next Crisis</p>
+                    <p className="text-lg font-semibold text-gray-900">{daysUntilCrisis} days</p>
+                  </div>
+                )}
+                <div className="backdrop-blur-lg bg-gradient-to-br from-white/40 to-white/20 border border-white/40 rounded-xl px-4 py-2 shadow-lg">
+                  <p className="text-sm text-gray-600">Current Balance</p>
+                  <p className="text-lg font-semibold text-gray-900">${currentBalance}</p>
+                </div>
+                {ebtBalance !== null && (
+                  <div className="backdrop-blur-lg bg-gradient-to-br from-white/40 to-white/20 border border-white/40 rounded-xl px-4 py-2 shadow-lg">
+                    <p className="text-sm text-gray-600">EBT Balance</p>
+                    <p className="text-lg font-semibold text-gray-900">${ebtBalance}</p>
+                  </div>
+                )}
               </div>
-              <div className="backdrop-blur-lg bg-gradient-to-br from-white/40 to-white/20 border border-white/40 rounded-xl px-4 py-2 shadow-lg">
-                <p className="text-gray-600">Current Balance</p>
-                <p className="text-gray-900">${currentBalance}</p>
-              </div>
-            </div>
+            )}
           </div>
           {/* Illustration */}
           <div className="hidden lg:block flex-shrink-0">
-            <img 
-              src={bannerIllustration} 
-              alt="Community support illustration" 
+            <img
+              src={bannerIllustration}
+              alt="Community support illustration"
               className="w-64 h-auto object-contain"
             />
           </div>
