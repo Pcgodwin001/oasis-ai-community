@@ -22,23 +22,10 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>UIApplicationSceneManifest</key>
-	<dict>
-		<key>UIApplicationSupportsMultipleScenes</key>
-		<false/>
-		<key>UISceneConfigurations</key>
-		<dict>
-			<key>UIWindowSceneSessionRoleApplication</key>
-			<array>
-				<dict>
-					<key>UISceneConfigurationName</key>
-					<string>Default Configuration</string>
-					<key>UISceneDelegateClassName</key>
-					<string>$(PRODUCT_MODULE_NAME).SceneDelegate</string>
-				</dict>
-			</array>
-		</dict>
-	</dict>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>UIMainStoryboardFile</key>
+	<string>Main</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
@@ -58,11 +45,11 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Oasis needs your location to find nearby food pantries and calculate distances.</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Oasis uses your location to help you find the closest food resources.</string>
-	<key>NSUserNotificationsUsageDescription</key>
-	<string>Oasis sends you important alerts about government shutdown risks and benefit changes.</string>
+	<key>KeyboardDisplayRequiresUserAction</key>
+	<false/>
+	<key>HideKeyboardFormAccessoryBar</key>
+	<true/>
+	<key>DisableLongPressGestures</key>
+	<false/>
 </dict>
 </plist>
