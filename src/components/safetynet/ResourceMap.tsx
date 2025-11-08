@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { 
+import {
   MapPin, Phone, Clock, Navigation, Star, Filter, List, Map,
   ChevronRight, Heart, Share2, AlertCircle
 } from 'lucide-react';
@@ -25,6 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select';
+import GoogleMapWrapper from '../maps/GoogleMapWrapper';
 
 const resources = [
   {
@@ -40,6 +41,7 @@ const resources = [
     walkIn: true,
     rating: 4.5,
     reviews: 128,
+    coordinates: { lat: 35.6145, lng: -88.8139 },
   },
   {
     id: 2,
@@ -54,6 +56,7 @@ const resources = [
     walkIn: true,
     rating: 4.8,
     reviews: 215,
+    coordinates: { lat: 35.6245, lng: -88.8239 },
   },
   {
     id: 3,
@@ -68,6 +71,7 @@ const resources = [
     walkIn: false,
     rating: 4.2,
     reviews: 89,
+    coordinates: { lat: 35.5945, lng: -88.8439 },
   },
   {
     id: 4,
@@ -82,6 +86,7 @@ const resources = [
     walkIn: true,
     rating: 4.6,
     reviews: 167,
+    coordinates: { lat: 35.6345, lng: -88.8039 },
   },
 ];
 
@@ -254,37 +259,36 @@ export default function ResourceMap() {
       </div>
 
       {/* Right Panel - Map */}
-      <div className="hidden lg:flex flex-1 bg-gray-100 items-center justify-center relative">
-        <div className="text-center">
-          <MapPin className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-          <p className="text-gray-600 mb-2">Interactive Map View</p>
-          <p className="text-gray-500">
-            Map showing {filteredResources.length} locations would display here
-          </p>
-        </div>
-
-        {/* Map Controls */}
-        <div className="absolute top-4 right-4 space-y-2">
-          <Button size="sm" variant="secondary">Zoom In</Button>
-          <Button size="sm" variant="secondary">Zoom Out</Button>
-          <Button size="sm" variant="secondary">Full Screen</Button>
+      <div className="hidden lg:flex flex-1 bg-gray-100 relative overflow-hidden">
+        <div className="absolute inset-0">
+          <GoogleMapWrapper
+            markers={filteredResources.map((resource) => ({
+              id: resource.id,
+              position: resource.coordinates,
+              title: resource.name,
+              type: resource.type,
+              onClick: () => setSelectedResource(resource),
+            }))}
+            center={{ lat: 35.6145, lng: -88.8139 }}
+            zoom={13}
+          />
         </div>
 
         {/* Legend */}
         <div className="absolute bottom-4 right-4 bg-white rounded-lg p-4 shadow-lg">
-          <p className="text-gray-900 mb-2">Map Legend</p>
+          <p className="text-gray-900 font-semibold mb-2">Map Legend</p>
           <div className="space-y-1">
             <div className="flex items-center space-x-2">
               <div className="w-3 h-3 bg-blue-600 rounded-full" />
-              <span className="text-gray-600">Food Banks</span>
+              <span className="text-gray-600 text-sm">Food Banks</span>
             </div>
             <div className="flex items-center space-x-2">
               <div className="w-3 h-3 bg-green-600 rounded-full" />
-              <span className="text-gray-600">Soup Kitchens</span>
+              <span className="text-gray-600 text-sm">Soup Kitchens</span>
             </div>
             <div className="flex items-center space-x-2">
-              <div className="w-3 h-3 bg-purple-600 rounded-full" />
-              <span className="text-gray-600">Your Location</span>
+              <div className="w-3 h-3 bg-blue-600 rounded-full" />
+              <span className="text-gray-600 text-sm">Food Pantries</span>
             </div>
           </div>
         </div>

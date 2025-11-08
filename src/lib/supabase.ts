@@ -241,6 +241,180 @@ export type Database = {
           created_at?: string;
         };
       };
+      budget_entries: {
+        Row: {
+          id: string;
+          user_id: string;
+          category: string;
+          amount: number;
+          type: 'income' | 'expense';
+          date: string;
+          description: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          category: string;
+          amount: number;
+          type: 'income' | 'expense';
+          date: string;
+          description?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          category?: string;
+          amount?: number;
+          type?: 'income' | 'expense';
+          date?: string;
+          description?: string | null;
+          created_at?: string;
+        };
+      };
+      job_listings: {
+        Row: {
+          id: string;
+          title: string;
+          company: string;
+          location: string;
+          pay_rate: string;
+          type: string;
+          description: string | null;
+          requirements: string[] | null;
+          posted_date: string | null;
+          is_active: boolean | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          title: string;
+          company: string;
+          location: string;
+          pay_rate: string;
+          type: string;
+          description?: string | null;
+          requirements?: string[] | null;
+          posted_date?: string | null;
+          is_active?: boolean | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          title?: string;
+          company?: string;
+          location?: string;
+          pay_rate?: string;
+          type?: string;
+          description?: string | null;
+          requirements?: string[] | null;
+          posted_date?: string | null;
+          is_active?: boolean | null;
+          created_at?: string;
+        };
+      };
+      job_applications: {
+        Row: {
+          id: string;
+          user_id: string;
+          job_id: string;
+          status: string | null;
+          applied_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          job_id: string;
+          status?: string | null;
+          applied_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          job_id?: string;
+          status?: string | null;
+          applied_at?: string | null;
+        };
+      };
+      community_posts: {
+        Row: {
+          id: string;
+          user_id: string;
+          author_name: string;
+          content: string;
+          category: string;
+          likes_count: number;
+          comments_count: number;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          author_name: string;
+          content: string;
+          category: string;
+          likes_count?: number;
+          comments_count?: number;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          author_name?: string;
+          content?: string;
+          category?: string;
+          likes_count?: number;
+          comments_count?: number;
+          created_at?: string;
+        };
+      };
+      post_likes: {
+        Row: {
+          id: string;
+          post_id: string;
+          user_id: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          post_id: string;
+          user_id: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          post_id?: string;
+          user_id?: string;
+          created_at?: string;
+        };
+      };
+      post_comments: {
+        Row: {
+          id: string;
+          post_id: string;
+          user_id: string;
+          author_name: string;
+          content: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          post_id: string;
+          user_id: string;
+          author_name: string;
+          content: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          post_id?: string;
+          user_id?: string;
+          author_name?: string;
+          content?: string;
+          created_at?: string;
+        };
+      };
     };
   };
 };

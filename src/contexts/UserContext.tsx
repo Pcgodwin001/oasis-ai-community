@@ -19,13 +19,12 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   const loadUserData = async (currentUser: User | null) => {
+    // Don't block - load profile in background
     if (currentUser) {
-      const userProfile = await userService.getProfile(currentUser.id);
-      setProfile(userProfile);
+      userService.getProfile(currentUser.id).then(setProfile);
     } else {
       setProfile(null);
     }
-    setLoading(false);
   };
 
   const refreshProfile = async () => {
@@ -36,19 +35,35 @@ export function UserProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
+    let mounted = true;
+
+    // Set a timeout to prevent hanging
+    const timeout = setTimeout(() => {
+      if (mounted && loading) {
+        setLoading(false);
+      }
+    }, 1000);
+
     // Load current user on mount
     authService.getCurrentUser().then((currentUser) => {
-      setUser(currentUser);
-      loadUserData(currentUser);
+      if (mounted) {
+        setUser(currentUser);
+        setLoading(false); // Don't wait for profile
+        loadUserData(currentUser);
+      }
     });
 
     // Subscribe to auth state changes
     const subscription = authService.onAuthStateChange((currentUser) => {
-      setUser(currentUser);
-      loadUserData(currentUser);
+      if (mounted) {
+        setUser(currentUser);
+        loadUserData(currentUser);
+      }
     });
 
     return () => {
+      mounted = false;
+      clearTimeout(timeout);
       subscription.unsubscribe();
     };
   }, []);

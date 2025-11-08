@@ -23,6 +23,7 @@ import { useUser } from '../../contexts/UserContext';
 import { authService } from '../../services/authService';
 import { toast } from 'sonner';
 import oasisLogo from 'figma:asset/fe6c3ee5b4ff23915f06469b49dec7bb4e9b188a.png';
+import BottomNav from '../mobile/BottomNav';
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -78,7 +79,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
   return (
     <div className="h-screen flex overflow-hidden bg-gradient-to-br from-blue-50/40 via-gray-50 to-cyan-50/30 relative">
       {/* Ambient background */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
         <div className="absolute top-0 left-0 w-96 h-96 bg-blue-200/15 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '8s' }} />
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-cyan-200/15 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '10s' }} />
       </div>
@@ -329,9 +330,12 @@ export default function MainLayout({ children }: MainLayoutProps) {
         </header>
 
         {/* Main Content Area */}
-        <main className="flex-1 overflow-auto">
+        <main className="flex-1 overflow-auto pb-20 lg:pb-0">
           {children}
         </main>
+
+        {/* Mobile Bottom Navigation */}
+        <BottomNav />
       </div>
     </div>
   );

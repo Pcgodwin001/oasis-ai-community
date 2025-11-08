@@ -16,6 +16,9 @@ import Community from './components/safetynet/Community';
 import EligibilityChecker from './components/safetynet/EligibilityChecker';
 import Transportation from './components/safetynet/Transportation';
 import Settings from './components/safetynet/Settings';
+import Resume from './pages/Resume';
+import ResumeBuilder from './pages/ResumeBuilder';
+import LandingPage from './pages/LandingPage';
 
 function AppRoutes() {
   const { user, loading } = useUser();
@@ -35,6 +38,7 @@ function AppRoutes() {
 
   return (
     <Routes>
+      <Route path="/landing" element={<LandingPage />} />
       <Route
         path="/login"
         element={isAuthenticated ? <Navigate to="/" /> : <Login />}
@@ -57,6 +61,8 @@ function AppRoutes() {
                 <Route path="/budget" element={<BudgetGuide />} />
                 <Route path="/receipts" element={<ReceiptScanner />} />
                 <Route path="/jobs" element={<JobSearch />} />
+                <Route path="/resume" element={<Resume />} />
+                <Route path="/resume/builder/:id" element={<ResumeBuilder />} />
                 <Route path="/community" element={<Community />} />
                 <Route path="/eligibility" element={<EligibilityChecker />} />
                 <Route path="/transportation" element={<Transportation />} />

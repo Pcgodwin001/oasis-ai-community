@@ -1,4 +1,5 @@
 import { Briefcase, MapPin, DollarSign, Clock, Search, Filter } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
@@ -38,6 +39,8 @@ const jobs = [
 ];
 
 export default function JobSearch() {
+  const navigate = useNavigate();
+
   return (
     <div className="p-4 lg:p-6 space-y-6">
       <div>
@@ -122,7 +125,12 @@ export default function JobSearch() {
             </CardHeader>
             <CardContent>
               <p className="text-gray-600 mb-4">Create a professional resume with AI assistance</p>
-              <Button className="w-full">Build Resume</Button>
+              <Button
+                className="w-full bg-gradient-to-r from-blue-600 to-indigo-600"
+                onClick={() => navigate('/resume/builder/new')}
+              >
+                Build Resume
+              </Button>
             </CardContent>
           </Card>
 
